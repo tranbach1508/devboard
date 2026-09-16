@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             Int      @id @default(autoincrement()) @map("id")
+  teamId         Int?     @map("team_id")
+  team           Team?    @relation(fields: [teamId], references: [id])
+  name           String   @db.VarChar(255) @map("name")
+  email          String   @unique @map("email")
+  passwordHash   String   @db.VarChar(255) @map("password_hash")
+  projects       Project[]
+  projectMembers ProjectMember[]
+  comments       Comment[]
+  createdTasks   Task[]   @relation("memberCreated")
+  tasksAssigned  Task[]   @relation("memberAssigned")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Team {
+  id          Int       @id @default(autoincrement()) @map("id")
+  name        String    @db.VarChar(255) @map("name")
+  description String    @db.VarChar(255) @map("description")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  users       User[]
+  projects    Project[]
+
+  @@map("teams")
+}
+
+model Project {
+  id             Int           @id @default(autoincrement()) @map("id")
+  teamId         Int           @map("team_id")
+  team           Team          @relation(fields: [teamId], references: [id])
+  name           String        @db.VarChar(255) @map("name")
+  description    String        @db.VarChar(255) @map("description")
+  status         ProjectStatus @default(PLANNING) @map("status")
+  createdBy      Int           @map("created_by")
+  creator        User          @relation(fields: [createdBy], references: [id])
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  projectMembers ProjectMember[]
+  tasks          Task[]
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  id        Int      @id @default(autoincrement()) @map("id")
+  projectId Int      @map("project_id")
+  project   Project  @relation(fields: [projectId], references: [id])
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  joinedAt  DateTime @default(now()) @map("joined_at")
+  role           Role     @default(MEMBER) @map("role")
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+model Task {
+  id            Int        @id @default(autoincrement()) @map("id")
+  projectId     Int        @map("project_id")
+  project       Project    @relation(fields: [projectId], references: [id])
+  assigneeId    Int?       @map("assignee_id")
+  assignee      User?      @relation("memberAssigned", fields: [assigneeId], references: [id])
+  title         String     @db.VarChar(255) @map("title")
+  description   String     @db.Text @map("description")
+  status        TaskStatus @default(TODO) @map("status")
+  priority      Priority   @default(LOW) @map("priority")
+  dueDate       DateTime?  @db.Date @map("due_date")
+  createdBy     Int        @map("created_by")
+  memberCreated User       @relation("memberCreated", fields: [createdBy], references: [id])
+  comments      Comment[]
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement()) @map("id")
+  taskId    Int      @map("task_id")
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  content   String   @db.VarChar(255) @map("content")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comments")
+}
+
+// Định nghĩa kiểu dữ liệu Enum (Phân quyền)
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+// Định nghĩa kiểu dữ liệu Enum (Trạng thái)
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  READY_FOR_REVIEW
+  DONE
+}
+
+// Định nghĩa kiểu dữ liệu Enum (Mức độ ưu tiên)
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
