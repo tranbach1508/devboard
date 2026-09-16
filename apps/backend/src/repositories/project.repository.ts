@@ -9,7 +9,6 @@ export const getMembersByProjectId = async (projectId: number) => {
                     id: true,
                     name: true,
                     email: true,
-                    role: true,
                 },
             },
         },
