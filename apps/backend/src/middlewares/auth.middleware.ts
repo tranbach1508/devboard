@@ -33,7 +33,7 @@ export const authenticate = async (
                 401
             );
         }
-        const { passwordHash: _, ...safeUser } = user;
+        const { passwordHash: _passwordHash, ...safeUser } = user;
         req.user = safeUser;
         next();
     }catch(error){

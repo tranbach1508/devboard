@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as projectCtrl from "../controllers/project.controller";
 import { asyncHandler } from "../utils/async-handler";
 import { validate } from "../middlewares/validate.middleware";
-import { getProjectByIdSchema, getMembersSchema } from "../validations/project.validation";
+import { getMembersSchema } from "../validations/project.validation";
 
 const router = Router();
 

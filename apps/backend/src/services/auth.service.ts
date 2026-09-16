@@ -2,7 +2,6 @@ import * as authRepo from '../repositories/auth.repository';
 import { AppError } from '../utils/app-error';
 import {generateAccessToken} from "../utils/jwt";
 import {hashPassword,comparePassword} from "../utils/password";
-import bcrypt from 'bcrypt';
 
 export const registerUser = async (name: string, email: string, password: string) => {
     const existingUser = await authRepo.findUserByEmail(email);
@@ -12,7 +11,7 @@ export const registerUser = async (name: string, email: string, password: string
     }
     const passwordHash = await hashPassword(password);
     const user = await authRepo.add(name,email,passwordHash);
-    const { passwordHash: _, ...safeUser } = user;
+    const { passwordHash: _passwordHash, ...safeUser } = user;
     const accessToken = await generateAccessToken(user.id);
     return {
         user: safeUser,
@@ -33,7 +32,7 @@ export const loginUser = async (email: string, password: string) => {
         throw new AppError("Invalid email or password", 401 );
     }
     const accessToken = await generateAccessToken(user.id);
-    const { passwordHash: _, ...safeUser } = user;
+    const { passwordHash: _passwordHash, ...safeUser } = user;
     return {
         user: safeUser,
         accessToken

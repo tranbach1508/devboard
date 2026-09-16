@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/app-error";
 
-export const authorize = (...roles: string[]) => {
+export const authorize = (..._roles: string[]) => {
   return (
     req: Request,
     _res: Response,

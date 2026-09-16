@@ -13,3 +13,4 @@ apps/backend/src/generated/prisma/
 .claude/
 .devin/
 .vscode/
+package-lock.json

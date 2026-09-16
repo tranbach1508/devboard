@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as taskSrv from "../services/task.service";
-import { AppError } from '../utils/app-error';
 
 export const createTask = async (req: Request,res: Response) => {
     const projectId = Number(req.params.projectId);

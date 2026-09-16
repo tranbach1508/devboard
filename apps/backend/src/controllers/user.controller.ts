@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as userSrv from "../services/user.service";
-import { AppError } from '../utils/app-error';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     const result = await userSrv.getAllUsers();

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as authSrv from "../services/auth.service";
-import { AppError } from '../utils/app-error';
 
 export const registerUser = async (req: Request,res: Response) => {
     const {name,email,password} = req.body;

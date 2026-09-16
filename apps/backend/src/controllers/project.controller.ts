@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import * as projectSrv from "../services/project.service";
 
 export const getProjectMembers = async (req: Request, res: Response) => {
