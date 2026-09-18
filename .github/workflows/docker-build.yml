@@ -27,13 +27,15 @@ jobs:
         run: |
           docker build \
             -t ghcr.io/${{ github.repository_owner }}/team-pm-backend:latest \
-            ./apps/backend
+            -f apps/backend/Dockerfile \
+            .
 
       - name: Build Frontend Image
         run: |
           docker build \
             -t ghcr.io/${{ github.repository_owner }}/team-pm-frontend:latest \
-            ./apps/frontend
+            -f apps/frontend/Dockerfile \
+            .
 
       - name: Push Backend Image
         run: |
