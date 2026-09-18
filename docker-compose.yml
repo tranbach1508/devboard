@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
+    container_name: team-pm-backend
 
     environment:
       REDIS_URL: redis://redis:6379
