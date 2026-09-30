@@ -4,10 +4,23 @@ import { getPriority } from '../utils/priority';
 import { AppError } from '../utils/app-error';
 import {cacheService} from '../shared/cache/cache.service';
 import { Task } from '../generated/prisma/client';
+import { randomUUID } from "node:crypto";
+import { publishTaskCreated } from "../messaging/task.producer";
 
 export const createTask = async (projectId: number,assigneeId: number,title: string,description: string,priority: string,dueDate: Date,createdBy: number) => {
     const _priority = getPriority(priority);
     const task = await taskRepo.add(projectId,assigneeId,title,description,_priority,new Date(dueDate),createdBy);
+    const event = {
+      eventId: randomUUID(),
+      eventType: "task.created" as const,
+      occurredAt: new Date().toISOString(),
+      payload: {
+        taskId: task.id,
+        assigneeId: task.assigneeId,
+        title: task.title,
+      },
+    };
+    await publishTaskCreated(event);
     return task;
 }
 

@@ -7,12 +7,15 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "vitest run",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "worker:notifications": "tsx src/workers/notification.worker.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@team-pm/shared": "1.0.0",
+    "@types/amqplib": "^0.10.8",
+    "amqplib": "^2.2.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",

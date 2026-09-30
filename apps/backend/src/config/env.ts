@@ -9,5 +9,6 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET || "",
   jwtExpiresIn: Number(process.env.JWT_EXPIRES_IN) || 3600,
   corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
-  redisUrl: process.env.REDIS_URL
+  redisUrl: process.env.REDIS_URL,
+  rabbitmqUrl: process.env.RABBITMQ_URL
 } as const;

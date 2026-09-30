@@ -11,15 +11,18 @@
     "dev:frontend": "npm run dev --workspace=apps/frontend",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspace=apps/backend"
+    "lint": "npm run lint --workspace=apps/backend",
+    "worker:notifications": "npm run worker:notifications --workspace=apps/backend"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.8",
     "concurrently": "^8.2.2",
     "tsx": "^4.23.12",
     "typescript": "^5.4.0"
   },
   "dependencies": {
     "@prisma/client": "^7.10.0",
+    "amqplib": "^2.2.0",
     "prisma": "^7.10.0"
   }
 }

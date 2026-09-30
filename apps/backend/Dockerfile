@@ -5,8 +5,9 @@ WORKDIR /app
 # Root workspace
 COPY package.json package-lock.json ./
 
-# Workspace package.json files
+# Workspace package.json files (all workspaces needed for npm ci to resolve correctly)
 COPY apps/backend/package.json ./apps/backend/package.json
+COPY apps/frontend/package.json ./apps/frontend/package.json
 COPY packages/shared/package.json ./packages/shared/package.json
 
 # Install dependencies

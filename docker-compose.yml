@@ -8,12 +8,14 @@ services:
     environment:
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgresql://postgres:tranbach123@postgres:5432/my-project-postgres
+      RABBITMQ_URL: amqp://root:tranbach123@rabbitmq:5672
       JWT_SECRET: dev-secret-key-change-in-production
       JWT_EXPIRES_IN: 1h
 
     depends_on:
       - postgres
       - redis
+      - rabbitmq
 
     volumes:
       - ./apps/backend:/app/apps/backend
@@ -63,6 +65,20 @@ services:
       - "80"
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: team-pm-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: tranbach123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   postgres_data:
   redis_data:
+  rabbitmq_data:
