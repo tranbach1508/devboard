@@ -1,10 +1,10 @@
 import amqp, {
   type Channel,
-  type Connection,
+  type ChannelModel,
 } from "amqplib";
-import {env} from "../config/env"
+import { env } from "../config/env";
 
-let connection: Connection | undefined;
+let connection: ChannelModel | undefined;
 let channel: Channel | undefined;
 let connecting: Promise<Channel> | undefined;
 
@@ -34,21 +34,12 @@ async function createChannel(): Promise<Channel> {
 
   connection = await amqp.connect(url);
 
-  connection.on("close", () => {
-    channel = undefined;
-    connection = undefined;
-  });
-
   connection.on("error", () => {
     channel = undefined;
     connection = undefined;
   });
 
   channel = await connection.createChannel();
-
-  channel.on("close", () => {
-    channel = undefined;
-  });
 
   channel.on("error", () => {
     channel = undefined;
@@ -61,14 +52,6 @@ export async function closeRabbitConnection(): Promise<void> {
   try {
     if (channel) {
       await channel.close();
-    }
-  } catch {
-    // already closed
-  }
-
-  try {
-    if (connection) {
-      await connection.close();
     }
   } catch {
     // already closed
